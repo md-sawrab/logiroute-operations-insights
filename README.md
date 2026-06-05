@@ -1,6 +1,8 @@
 ### LogiRoute Analytics - Logistics Performance Dashboard
 
-[![Play video](video-play-button.svg)](docs/index.html)
+![Video preview](preview.gif)
+
+[Open full video (autoplays on the preview page)](docs/index.html)
 
 Welcome to the **LogiRoute Analytics Dashboard** repository! This project is a comprehensive data analytics and business intelligence solution designed for a modern logistics and supply chain ecosystem. 
 
