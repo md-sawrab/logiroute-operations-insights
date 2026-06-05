@@ -1,5 +1,7 @@
 ### LogiRoute Analytics - Logistics Performance Dashboard
 
+[![Play video](video-play-button.svg)](Video.mp4)
+
 Welcome to the **LogiRoute Analytics Dashboard** repository! This project is a comprehensive data analytics and business intelligence solution designed for a modern logistics and supply chain ecosystem. 
 
 #### 🚀 Project Overview
@@ -12,6 +14,7 @@ The goal of this project is to transform raw logistics data into actionable busi
 * **On-Time Delivery Rate (%):** Monitors SLA compliance and tracks service level fluctuations.
 * **Customer Satisfaction Score (CSAT):** Captures customer feedback trends to measure service quality.
 * **Average Delivery Duration:** Evaluates processing and transit times in hours to optimize delivery routes.
+
 
 
 #### 📊 Dashboard Views
@@ -73,6 +76,167 @@ Provides a macro-level overview of business success. It uses modern **KPI Card V
 - Improve layout, alignment, and visual consistency.
 
 
-### 
+#### DAX Measures & Calculated Columns
 
+##### Core KPIs
+
+```DAX
+Total Orders = COUNT(Orders[Order Date])
+
+Delivered Orders =
+CALCULATE([Total Orders], Orders[Order Status] = "Delivered")
+
+On Time Orders =
+CALCULATE(
+    [Total Orders],
+    Orders[Order Status] = "Delivered",
+    Orders[Is On Time] = TRUE()
+)
+
+On Time Delivery Rate =
+[On Time Orders] / [Delivered Orders]
+
+Delayed Delivery =
+CALCULATE(
+    [Total Orders],
+    Orders[Order Status] = "Delivered",
+    Orders[Is On Time] = FALSE()
+)
+
+Delayed Delivery Rate =
+[Delayed Delivery] / [Delivered Orders]
+
+Average Delivery Time(Hrs) =
+AVERAGE(Orders[Delivery Time Hours])
+
+CSAT Satisfied Orders =
+CALCULATE(
+    [Total Orders],
+    Orders[Customer Satisfaction Score] >= 4
+)
+
+CSAT % =
+[CSAT Satisfied Orders] / [Total Orders]
+```
+
+##### Previous Month (PM) Measures
+
+```DAX
+PM Orders =
+CALCULATE(
+    [Total Orders],
+    DATEADD('Date Table'[Date], -1, MONTH)
+)
+
+PM On Time Delivery Rate =
+CALCULATE(
+    [On Time Delivery Rate],
+    DATEADD('Date Table'[Date], -1, MONTH)
+)
+
+PM CSAT =
+CALCULATE(
+    [CSAT %],
+    DATEADD('Date Table'[Date], -1, MONTH)
+)
+
+PM Avg Delivery Time =
+CALCULATE(
+    [Average Delivery Time(Hrs)],
+    DATEADD('Date Table'[Date], -1, MONTH)
+)
+```
+
+##### Month-over-Month (MoM) Measures
+
+```DAX
+MOM Orders % =
+DIVIDE(
+    [Total Orders] - [PM Orders],
+    [PM Orders]
+)
+
+MOM On Time Delivery % =
+DIVIDE(
+    [On Time Delivery Rate] - [PM On Time Delivery Rate],
+    [PM On Time Delivery Rate]
+)
+
+MOM CSAT % =
+DIVIDE(
+    [CSAT %] - [PM CSAT],
+    [PM CSAT]
+)
+
+MOM Avg Delivery % =
+DIVIDE(
+    [Average Delivery Time(Hrs)] - [PM Avg Delivery Time],
+    [PM Avg Delivery Time]
+)
+```
+
+##### Driver Information Measures
+
+```DAX
+YoE =
+"YOE: "
+    & SELECTEDVALUE(Drivers[Experience Years], "N/A")
+    & " Years"
+
+No of Drivers =
+"No of Drivers: "
+    & COUNT(Drivers[DriverID])
+
+Hire Date Title =
+"Hire Date: "
+    & SELECTEDVALUE(Drivers[Hire Date])
+
+Drivers Title =
+SELECTEDVALUE(
+    Drivers[DriverName],
+    "All Drivers"
+)
+    & " made "
+    & [Total Orders]
+    & " Deliveries in "
+    & [Year Month Title]
+```
+
+##### Rating Measure
+
+```DAX
+Star Rating =
+REPT(
+    UNICHAR(9733),
+    AVERAGE(Drivers[Performance Rating])
+)
+&
+REPT(
+    UNICHAR(9734),
+    5 - AVERAGE(Drivers[Performance Rating])
+)
+```
+
+##### Date Table Columns
+
+```DAX
+Day =
+FORMAT('Date Table'[Date], "ddd")
+
+Day NO =
+WEEKDAY('Date Table'[Date], 2)
+
+Month =
+FORMAT('Date Table'[Date], "mmmm")
+
+Month No. =
+MONTH('Date Table'[Date])
+
+Year =
+YEAR('Date Table'[Date])
+```
+
+### Conclusion
+
+This dashboard provides a comprehensive view of logistics operations by tracking order volume, delivery performance, customer satisfaction, driver efficiency, and vehicle utilization. Through interactive visualizations, KPI monitoring, and time-based analysis, stakeholders can identify operational bottlenecks, measure performance trends, and make data-driven decisions to improve overall delivery efficiency and customer experience.
 
