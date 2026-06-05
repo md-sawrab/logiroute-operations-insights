@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360">
-  <rect width="640" height="360" rx="12" ry="12" fill="#111827" />
-  <circle cx="320" cy="180" r="64" fill="#ffffff20" />
-  <polygon points="270,150 270,210 330,180" fill="#ffffff" />
-  <text x="320" y="310" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#9CA3AF" text-anchor="middle">Click to play</text>
-</svg>
